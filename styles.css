@@ -16,3 +16,16 @@ body {
     display: flex;
     justify-content: center;
 }
+
+.content-container{
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+}
+
+.todo-list-container {
+    background: linear-gradient(to bottom right, #eaf4ff, #c7e0ff );
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+}
