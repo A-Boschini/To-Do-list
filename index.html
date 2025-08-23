@@ -1,54 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-   <script src="scripts.js"></script>
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>ToDo App</title>
 </head>
 <body>
-   <div class="content-container">
+  <div class="content-container">
     <div class="todo-list-container">
-        <h2 class="title">ToDo App by Alberto Boschini</h2>
-        <div class="add-todo-container">
-            <input type="text" id="new-todo" placeholder="Add a new task"/>
-            <button id="add-button">ADD</button>
-        </div>
-        <h3>To Do List</h3>
-        <ul id="To Do List"></ul>
+      <h2 class="title">ToDo App by Alberto Boschini</h2>
+      
+      <div class="add-todo-container">
+        <input type="text" id="new-todo" placeholder="Add a new task" />
+        <button id="add-button">ADD</button>
+      </div>
+      
+      <h3>To Do List</h3>
+      <ul id="todo-list">
+        
         <li class="todo-item">
-        <input type="checkbox" checked />
-        <label>Comprar Golosinas</label>
-        <div class="todo-actions"></div>
-          <div class="icon edit.icon">
-          <img src="edit.svg" alt="Edit" />
+          <input type="checkbox" checked />
+          <label>Comprar Golosinas</label>
+          <div class="todo-actions">
+            <div class="icon edit-icon">
+              <img src="edit.svg" alt="Edit" />
+            </div>
+            <div class="icon delete-icon">
+              <img src="delete.svg" alt="Delete" />
+            </div>
+          </div>
+        </li>
+        
+        <li class="todo-item">
+          <input type="checkbox" checked />
+          <label>Comprar Comidita seca</label>
+          <div class="todo-actions">
+            <div class="icon edit-icon">
+              <img src="edit.svg" alt="Edit" />
+            </div>
+            <div class="icon delete-icon">
+              <img src="delete.svg" alt="Delete" />
+            </div>
+          </div>
+        </li>
+        
+        <li class="todo-item">
+          <input type="checkbox" checked />
+          <label>Comprar Comida húmeda</label>
+          <div class="todo-actions">
+            <div class="icon edit-icon">
+              <img src="edit.svg" alt="Edit" />
+            </div>
+            <div class="icon delete-icon">
+              <img src="delete.svg" alt="Delete" />
+            </div>
+          </div>
+        </li>
+        
+      </ul>
     </div>
-    <div class="icon delete-icon">
-        <img src="delete.svg" alt="Delete" />
-    </div>
-  </li>
-  <li class="todo-item">
-        <input type="checkbox" checked />
-        <label>Comprar Comidita seca</label>
-        <div class="todo-actions"></div>
-          <div class="icon edit.icon">
-          <img src="edit.svg" alt="Edit" />
-    </div>
-    <div class="icon delete-icon">
-        <img src="delete.svg" alt="Delete" />
-    </div>
-  </li>
-  <li class="todo-item">
-        <input type="checkbox" checked />
-        <label>Comprar Comida humeda</label>
-        <div class="todo-actions"></div>
-          <div class="icon edit.icon">
-          <img src="edit.svg" alt="Edit" />
-    </div>
-    <div class="icon delete-icon">
-        <img src="delete.svg" alt="Delete" />
-    </div>
-  </li>
+  </div>
+  
+  <script src="scripts.js"></script>
 </body>
 </html>
