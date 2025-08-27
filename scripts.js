@@ -2,32 +2,21 @@ const todoList = document.getElementById("todo-list");
 const addButton = document.getElementById("add-button");
 const newTodoInput = document.getElementById("new-todo");
 
-// 🔹 Guardar en localStorage
-function saveTodos() {
-    const todos = [];
-    document.querySelectorAll(".todo-item").forEach(item => {
-        const text = item.querySelector("label").textContent;
-        const completed = item.classList.contains("completed");
-        todos.push({ text, completed });
-    });
+// ---- Persistencia en LocalStorage ----
+function getTodosFromStorage() {
+    const stored = localStorage.getItem("todos");
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveTodosToStorage(todos) {
     localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-// 🔹 Cargar de localStorage
-function loadTodos() {
-    const stored = localStorage.getItem("todos");
-    if (stored) {
-        const todos = JSON.parse(stored);
-        todos.forEach(todo => addTodo(todo.text, todo.completed));
-    }
-}
-
-function addTodo(text, completed = false) {
+// ---- Renderizar un todo en pantalla ----
+function addTodoToDOM(text, completed = false) {
     const li = document.createElement("li");
     li.className = "todo-item";
-    if (completed) {
-        li.classList.add("completed");
-    }
+    if (completed) li.classList.add("completed");
 
     li.innerHTML = `
       <input type="checkbox" ${completed ? "checked" : ""} />
@@ -43,27 +32,43 @@ function addTodo(text, completed = false) {
     `;
 
     todoList.appendChild(li);
-    saveTodos(); // 🔹 Guardar cada vez que agrego
 }
 
-function handleAddButtonClick() {
-    const text = newTodoInput.value.trim();
-    if (text !== "") {
-        addTodo(text);
-        newTodoInput.value = "";
-    }
+// ---- Refrescar lista completa desde storage ----
+function renderTodos() {
+    todoList.innerHTML = "";
+    const todos = getTodosFromStorage();
+    todos.forEach(todo => addTodoToDOM(todo.text, todo.completed));
+}
+
+// ---- Operaciones ----
+function addTodo(text) {
+    const todos = getTodosFromStorage();
+    todos.push({ text, completed: false });
+    saveTodosToStorage(todos);
+    renderTodos();
 }
 
 function toggleTodoCompleted(target) {
     const item = target.closest(".todo-item");
-    item.classList.toggle("completed");
-    saveTodos(); // 🔹 Guardar cambios
+    const text = item.querySelector("label").textContent;
+
+    let todos = getTodosFromStorage();
+    todos = todos.map(todo =>
+        todo.text === text ? { ...todo, completed: !todo.completed } : todo
+    );
+    saveTodosToStorage(todos);
+    renderTodos();
 }
 
 function deleteTodoItem(target) {
     const item = target.closest(".todo-item");
-    item.remove();
-    saveTodos(); // 🔹 Guardar cambios
+    const text = item.querySelector("label").textContent;
+
+    let todos = getTodosFromStorage();
+    todos = todos.filter(todo => todo.text !== text);
+    saveTodosToStorage(todos);
+    renderTodos();
 }
 
 function editTodoItem(target) {
@@ -81,17 +86,34 @@ function editTodoItem(target) {
 
     input.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
-            if (input.value.trim() !== "") {
-                label.textContent = input.value.trim();
-                item.replaceChild(label, input);
-                saveTodos(); // 🔹 Guardar cambios
+            let todos = getTodosFromStorage();
+            const newText = input.value.trim();
+
+            if (newText !== "") {
+                todos = todos.map(todo =>
+                    todo.text === currentText ? { ...todo, text: newText } : todo
+                );
+                saveTodosToStorage(todos);
+                renderTodos();
             } else {
-                deleteTodoItem(target);
+                // si queda vacío, se elimina
+                todos = todos.filter(todo => todo.text !== currentText);
+                saveTodosToStorage(todos);
+                renderTodos();
             }
         } else if (e.key === "Escape") {
-            item.replaceChild(label, input);
+            renderTodos(); // cancelar edición y refrescar
         }
     });
+}
+
+// ---- Manejo de eventos ----
+function handleAddButtonClick() {
+    const text = newTodoInput.value.trim();
+    if (text !== "") {
+        addTodo(text);
+        newTodoInput.value = "";
+    }
 }
 
 function handleTodoListClick(e) {
@@ -113,5 +135,5 @@ function handleTodoListClick(e) {
 addButton.addEventListener("click", handleAddButtonClick);
 todoList.addEventListener("click", handleTodoListClick);
 
-// 🔹 Cargar todos guardados al iniciar
-loadTodos();
+// ---- Inicializar ----
+renderTodos();
