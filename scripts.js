@@ -2,6 +2,26 @@ const todoList = document.getElementById("todo-list");
 const addButton = document.getElementById("add-button");
 const newTodoInput = document.getElementById("new-todo");
 
+// 🔹 Guardar en localStorage
+function saveTodos() {
+    const todos = [];
+    document.querySelectorAll(".todo-item").forEach(item => {
+        const text = item.querySelector("label").textContent;
+        const completed = item.classList.contains("completed");
+        todos.push({ text, completed });
+    });
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+// 🔹 Cargar de localStorage
+function loadTodos() {
+    const stored = localStorage.getItem("todos");
+    if (stored) {
+        const todos = JSON.parse(stored);
+        todos.forEach(todo => addTodo(todo.text, todo.completed));
+    }
+}
+
 function addTodo(text, completed = false) {
     const li = document.createElement("li");
     li.className = "todo-item";
@@ -23,6 +43,7 @@ function addTodo(text, completed = false) {
     `;
 
     todoList.appendChild(li);
+    saveTodos(); // 🔹 Guardar cada vez que agrego
 }
 
 function handleAddButtonClick() {
@@ -36,11 +57,13 @@ function handleAddButtonClick() {
 function toggleTodoCompleted(target) {
     const item = target.closest(".todo-item");
     item.classList.toggle("completed");
+    saveTodos(); // 🔹 Guardar cambios
 }
 
 function deleteTodoItem(target) {
     const item = target.closest(".todo-item");
     item.remove();
+    saveTodos(); // 🔹 Guardar cambios
 }
 
 function editTodoItem(target) {
@@ -61,11 +84,12 @@ function editTodoItem(target) {
             if (input.value.trim() !== "") {
                 label.textContent = input.value.trim();
                 item.replaceChild(label, input);
+                saveTodos(); // 🔹 Guardar cambios
             } else {
-                deleteTodoItem(target); // si deja vacío, se elimina
+                deleteTodoItem(target);
             }
         } else if (e.key === "Escape") {
-            item.replaceChild(label, input); // cancelar edición
+            item.replaceChild(label, input);
         }
     });
 }
@@ -89,11 +113,5 @@ function handleTodoListClick(e) {
 addButton.addEventListener("click", handleAddButtonClick);
 todoList.addEventListener("click", handleTodoListClick);
 
-// Mock todos iniciales
-const mockTodos = [
-    { text: "Buy Groceries", completed: false },
-    { text: "Walk the dog", completed: true },
-    { text: "Test", completed: false },
-];
-
-mockTodos.forEach(todo => addTodo(todo.text, todo.completed));
+// 🔹 Cargar todos guardados al iniciar
+loadTodos();
