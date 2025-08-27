@@ -53,3 +53,10 @@ function handleTodoListClick(e) {
 
 addButton.addEventListener("click", handleAddButtonClick);
 todoList.addEventListener("click", handleTodoListClick);
+
+const mockTodos = [
+    (text: "Buy Groceries", completed: false),
+    (text: "Walk the dog", completed: true),
+    (text: "test", completed: false),
+]
+mockTodos.forEach(todo) => addTodo(todo.text, todo.completed);
